@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native'
 import { Budget } from '../types/type'
 import { useState } from 'react'
+import globalStyles from '../styles'
 // ! nuevoPresupuesto.js
 
 type BudgetFormType = {
@@ -20,8 +21,8 @@ export const BudgetForm = ({handleNuevoPresupuesto}: BudgetFormType) => {
         style={styles.input}
         keyboardType='numeric'
         placeholder='Agrega tu Presupuesto Ej. 300'
-        value={presupuesto.toString()}
-        onChangeText={setPresupuesto}
+        value={presupuesto}
+        onChangeText={setPresupuesto} // * Para leer lo que vayamos colocando
       />
 
       <Pressable
@@ -35,24 +36,7 @@ export const BudgetForm = ({handleNuevoPresupuesto}: BudgetFormType) => {
 }
 
 const styles = StyleSheet.create({
-  contenedor: {
-    backgroundColor: '#FFF',
-    marginHorizontal: 10,
-    borderRadius: 10,
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    // transform: translateY(50px) // * Propiedad de CSS con Js
-    transform: [{ translateY: 60 }], // * 60 PX
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-
-    elevation: 7,
-  },
+  contenedor: globalStyles.contenedor,
 
   label: {
     textAlign: 'center',
