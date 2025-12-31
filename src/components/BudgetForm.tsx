@@ -1,17 +1,18 @@
 import React from 'react'
 import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native'
 import { Budget } from '../types/type'
-import { useState } from 'react'
 import globalStyles from '../styles'
 // ! nuevoPresupuesto.js
 
-type BudgetFormType = {
-  handleNuevoPresupuesto: (presupuesto: Budget) => void
+type BudgetFormProp = {
+  handleNuevoPresupuesto: (presupuesto: Budget) => void,
+  presupuesto: string,
+  setPresupuesto: (presupuesto: string) => void
 }
 
 
-export const BudgetForm = ({handleNuevoPresupuesto}: BudgetFormType) => {
-  const [presupuesto, setPresupuesto] = useState<string>('')
+export const BudgetForm = ({handleNuevoPresupuesto, presupuesto, setPresupuesto}: BudgetFormProp) => {
+  
   
   return (
     <View style={styles.contenedor}>
