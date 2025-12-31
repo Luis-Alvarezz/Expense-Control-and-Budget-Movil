@@ -1,44 +1,60 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import { StyleSheet, View, Alert } from 'react-native';
+// import { SafeAreaProvider } from 'react-native-safe-area-context';
+// import Header from './src/img/components/Header'; // * Si fuese el Componente export default function Header() {  }
+import { Header } from './src/components/Header';
+import { BudgetForm } from './src/components/BudgetForm';
+import { Budget } from './src/types/type';
+import { useState } from 'react';
+import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupuesto
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+const App = () => {
+  const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false)
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const handleNuevoPresupuesto = (presupuesto: Budget) => {
+    // console.log('Desde App...', presupuesto)
+    // console.log(typeof presupuesto)
+    // console.log(typeof presupuesto.amount)
+    // console.log('Presupuesto ->', presupuesto)
+    // console.log('Presupuesto.amount ->', presupuesto.amount)
+    if (Number(presupuesto.amount) > 0) {
+      // console.log('Si pasa')
+      // ! Desmontar el componente de BudgetForm y mostrar la visualización de expenses
+      setIsValidPresupusto(true)
+    }
+    else {
+      // console.log('No pasa')
+      Alert.alert('Error', 'El Presupuesto no puede ser cero o negativo', [{ text: 'Ok'}])
+    }
+  }
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
+    <View style={styles.contenedor}>
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+      <View style={styles.header}>
+        <Header />
 
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
+        { !isValidPresupuesto ?
+          <BudgetForm
+            handleNuevoPresupuesto={handleNuevoPresupuesto} 
+          />
+        : 
+          <BudgetTracker />
+        }
+      </View>
+
     </View>
   );
 }
 
+
 const styles = StyleSheet.create({
-  container: {
+  contenedor: {
+    backgroundColor: '#F5F5F5',
     flex: 1,
+  },
+  header: {
+    backgroundColor: '#3B82F6',
+    paddingTop: 50,
   },
 });
 
