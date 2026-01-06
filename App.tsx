@@ -3,20 +3,28 @@ import { StyleSheet, View, Alert } from 'react-native';
 // import Header from './src/img/components/Header'; // * Si fuese el Componente export default function Header() {  }
 import { Header } from './src/components/Header';
 import { BudgetForm } from './src/components/BudgetForm';
-import { Budget } from './src/types/type';
+import { Budget, Gasto } from './src/types/type';
 import { useState } from 'react';
 import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupuesto
 
 const App = () => {
   const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false)
+  const [presupuesto, setPresupuesto] = useState<string>('')
+  // const [gastos, setGastos] = useState<Array<{ id: number, cantidad: number }>>([
+  //     { id: 1, cantidad: 30 },
+  //     { id: 2, cantidad: 40 },
+  //     { id: 3, cantidad: 50 },
+  //   ])
+  // const [gastos, setGastos] = useState<Array<Gasto>>([])
+  const [gastos, setGastos] = useState<Gasto[]>([])
 
-  const handleNuevoPresupuesto = (presupuesto: Budget) => {
+  const handleNuevoPresupuesto = (presupuestoIngresado: Budget) => {
     // console.log('Desde App...', presupuesto)
     // console.log(typeof presupuesto)
     // console.log(typeof presupuesto.amount)
     // console.log('Presupuesto ->', presupuesto)
     // console.log('Presupuesto.amount ->', presupuesto.amount)
-    if (Number(presupuesto.amount) > 0) {
+    if (Number(presupuestoIngresado.amount) > 0) {
       // console.log('Si pasa')
       // ! Desmontar el componente de BudgetForm y mostrar la visualización de expenses
       setIsValidPresupusto(true)
@@ -35,10 +43,15 @@ const App = () => {
 
         { !isValidPresupuesto ?
           <BudgetForm
-            handleNuevoPresupuesto={handleNuevoPresupuesto} 
+            handleNuevoPresupuesto={handleNuevoPresupuesto}
+            presupuesto={presupuesto}
+            setPresupuesto={setPresupuesto}
           />
         : 
-          <BudgetTracker />
+          <BudgetTracker
+            presupuesto={Number(presupuesto)}
+            gastos={gastos}
+          />
         }
       </View>
 
