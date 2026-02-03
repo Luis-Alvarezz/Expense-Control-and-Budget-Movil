@@ -24,6 +24,8 @@ export const BudgetForm = ({handleNuevoPresupuesto, presupuesto, setPresupuesto}
         placeholder='Agrega tu Presupuesto Ej. 300'
         value={presupuesto}
         onChangeText={setPresupuesto} // * Para leer lo que vayamos colocando
+        placeholderTextColor="#64748B"
+
       />
 
       <Pressable
@@ -43,6 +45,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 24,
     color: '#3B82F6',
+    fontWeight: '500',
   },
   input: {
     backgroundColor: '#F5F5F5',
