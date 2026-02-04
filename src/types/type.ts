@@ -3,6 +3,9 @@ export type Budget = {
 }
 
 export type Gasto = {
-  id: number,
+  id: string,
+  nombre: string
   cantidad: number
+  categoria: string,
+  date: Date,
 }
