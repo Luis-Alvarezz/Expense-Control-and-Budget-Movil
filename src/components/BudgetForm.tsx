@@ -25,6 +25,7 @@ export const BudgetForm = ({handleNuevoPresupuesto, presupuesto, setPresupuesto}
         value={presupuesto}
         onChangeText={setPresupuesto} // * Para leer lo que vayamos colocando
         placeholderTextColor="#64748B"
+        maxLength={8}
 
       />
 
