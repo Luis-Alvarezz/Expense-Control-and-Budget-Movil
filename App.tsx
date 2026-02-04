@@ -1,4 +1,4 @@
-import { StyleSheet, View, Alert, Pressable, Image, Modal, Text } from 'react-native';
+import { StyleSheet, View, Alert, Pressable, Image, Modal } from 'react-native';
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
 // import Header from './src/img/components/Header'; // * Si fuese el Componente export default function Header() {  }
 import { Header } from './src/components/Header';
@@ -7,6 +7,7 @@ import { Budget, Gasto } from './src/types/type';
 import { useState } from 'react';
 import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupuesto
 import ExpenseModal from './src/components/ExpenseModal';
+import 'react-native-get-random-values'
 
 const App = () => {
   const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false) // * false hasta que el usuario ingrese un valor
@@ -17,8 +18,8 @@ const App = () => {
   //     { id: 3, cantidad: 50 },
   //   ])
   // const [gastos, setGastos] = useState<Array<Gasto>>([])
-  const [gastos, setGastos] = useState<Gasto[]>([])
-  const [modal, setModal] = useState<boolean>(false)
+  const [ gastos, setGasto ] = useState<Gasto[]>([])
+  const [ modal, setModal ] = useState<boolean>(false)
 
   const handleNuevoPresupuesto = (presupuestoIngresado: Budget) => {
     // console.log('Desde App...', presupuesto)
@@ -35,6 +36,38 @@ const App = () => {
       // console.log('No pasa')
       Alert.alert('Error', 'El Presupuesto no puede ser cero o negativo', [{ text: 'Ok'}])
     }
+  }
+
+  // ! Validar Gastos
+  const handleGastos = (gasto: Gasto) => {
+    // console.log('Desde gastos', gasto)
+    // console.log(Object.keys(gasto)) // * REVISA LA PARTE IZQUIERDA DEL OBJETO 
+    // console.log(Object.values(gasto)) // * REVISA LA PARTE DERECHA DEL OBJETO 
+    // console.log(gasto.date) // * CAMBIO porque en el TYPE paso de date: string a date: Date
+    // console.log(gasto.time)
+    // console.log('Date: ', gasto.date.toLocaleDateString())
+    // console.log('TIME:', gasto.date.toLocaleTimeString())
+    // console.log('FINAL:', gasto.date.toString())
+    // console.log('FECHA: ', gasto.date.toString()) // * RECIBE -> Sun May 02 2027 23:01:00 GMT-0600
+    // return
+
+    if (Object.values(gasto).includes('')) {
+      Alert.alert('Error', 'Todos los campos son obligatorios', [{text: 'OK'}])
+      return
+    }
+
+    const hour = gasto.date.getHours()
+    if (hour >= 23 || hour < 6) {
+      Alert.alert(
+        'Horario No permitido',
+        'Los gastos se registran en un horario de 6:00 am y 11:00 pm'
+      )
+      return // * Equivalente al else
+    }
+
+    // * Anadir el gasto al STATE
+    setGasto([...gastos, gasto])
+    setModal(!modal)
   }
 
   return (
@@ -62,9 +95,14 @@ const App = () => {
         <Modal
           visible={modal}
           animationType='slide'
+          onRequestClose={() => {
+            setModal(!modal)
+          }}
         >
           <ExpenseModal 
-            
+            modal={modal}
+            setModal={setModal}
+            handleGastos={handleGastos}
           />
         </Modal>
       )}
