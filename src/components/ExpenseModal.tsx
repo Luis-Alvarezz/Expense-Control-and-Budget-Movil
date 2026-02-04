@@ -32,7 +32,6 @@ const ExpenseModal = ({ modal, setModal, handleGastos }: ExpenseModalProps) => {
   const handleTimeChange = (selectedTime: Date) => {
     const cleanTime = new Date(selectedTime)
     cleanTime.setSeconds(0,0)
-    cleanTime.setMinutes(0,0,0)
     setTime(cleanTime)
   }
 
