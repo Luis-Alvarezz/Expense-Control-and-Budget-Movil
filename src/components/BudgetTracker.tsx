@@ -4,7 +4,7 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import globalStyles from '../styles'
 import AmountDisplay from './AmountDisplay'
 import { Gasto } from '../types/type'
-
+// ! Control de Presupuesto
 
 type BudgetTrackerProp = {
   presupuesto: number,
@@ -17,6 +17,7 @@ export default function BudgetTracker({ presupuesto, gastos }: BudgetTrackerProp
 
   useEffect(() => {
     const totalGastado = gastos.reduce( (total, gasto) => Number(gasto.cantidad) + total, 0  ) // * total o acumulativo, elemento del arreglo
+    const totalDisponible = presupuesto - totalGastado
     /*
       { id: 1, cantidad: 30 },
       { id: 2, cantidad: 40 },
@@ -29,8 +30,6 @@ export default function BudgetTracker({ presupuesto, gastos }: BudgetTrackerProp
     */
     // console.log(totalGastado) // * Efectivamente muestra 120
     setGastado(totalGastado)
-
-    const totalDisponible = presupuesto - totalGastado
     setDisponible(totalDisponible)
   }, [gastos, presupuesto])
 
