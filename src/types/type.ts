@@ -6,6 +6,9 @@ export type Gasto = {
   id: string,
   nombre: string
   cantidad: number
+  // categoria: Categoria,
   categoria: string,
   date: Date,
 }
+
+// export type Categoria = 'ahorro' | 'casa' | 'comida' | 'gastos' | 'ocio' | 'salud' | 'suscripciones'
