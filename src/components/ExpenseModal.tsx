@@ -1,11 +1,11 @@
 // * rafce - formularioGasto.js
 import React from 'react'
-import { Text, View, StyleSheet, Pressable, TextInput, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, Pressable, TextInput, ScrollView, Alert } from 'react-native'
 import globalStyles from '../styles'
 import { Picker } from '@react-native-picker/picker'
 import { useState } from 'react'
 import DatePicker from 'react-native-date-picker'
-import { Gasto } from '../types/type'
+import { Categoria, Gasto } from '../types/type'
 import { v4 as uuidv4 } from 'uuid'
 
 type ExpenseModalProps = {
@@ -17,7 +17,7 @@ type ExpenseModalProps = {
 const ExpenseModal = ({ modal, setModal, handleGastos }: ExpenseModalProps) => {
   const [nombre, setNombre] = useState('')
   const [cantidad, setCantidad] = useState('')
-  const [categoria, setCategoria] = useState('')
+  const [categoria, setCategoria] = useState<Categoria | null>(null)
   const [date, setDate] = useState(new Date())
   const [time, setTime] = useState(new Date())
 
@@ -50,12 +50,16 @@ const ExpenseModal = ({ modal, setModal, handleGastos }: ExpenseModalProps) => {
       0,
       0
     )
-
-    handleGastos({ 
+     if (!nombre.trim() || !cantidad.trim() || !categoria) {
+      Alert.alert('Error', 'Todos los campos son obligatorios')
+      return
+    }
+    handleGastos({
       id: uuidv4(),
       nombre,
       cantidad: Number(cantidad),
-      categoria,
+      // categoria: categoria!, // * ! -> non-null assertion --> Es forzar a Ts a que confie en mi y eso NO esta bien
+      categoria: categoria,
       date: fechaFinal
     })
   }
@@ -112,11 +116,11 @@ const ExpenseModal = ({ modal, setModal, handleGastos }: ExpenseModalProps) => {
               style={styles.picker}
               dropdownIconColor="#1E293B" // flechita Android
               selectedValue={categoria}
-              onValueChange={(itemValue) => {
+              onValueChange={(itemValue: Categoria | null) => {
                 setCategoria(itemValue)
               }} // * Para Leer lo que el usuario selecciona en Memoria
             >
-              <Picker.Item label="-- Seleccione --" value="" />
+              <Picker.Item label="-- Seleccione --" value={null} />
               <Picker.Item label="Ahorro" value="ahorro" />
               <Picker.Item label="Comida" value="comida" />
               <Picker.Item label="Casa" value="casa" />
