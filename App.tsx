@@ -1,4 +1,4 @@
-import { StyleSheet, View, Alert, Pressable, Image, Modal } from 'react-native';
+import { StyleSheet, View, Alert, Pressable, Image, Modal, ScrollView } from 'react-native';
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
 // import Header from './src/img/components/Header'; // * Si fuese el Componente export default function Header() {  }
 import { Header } from './src/components/Header';
@@ -8,6 +8,7 @@ import { useState } from 'react';
 import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupuesto
 import ExpenseModal from './src/components/ExpenseModal';
 import 'react-native-get-random-values'
+import { ExpenseList } from './src/components/ExpenseList';
 
 const App = () => {
   const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false) // * false hasta que el usuario ingrese un valor
@@ -72,24 +73,31 @@ const App = () => {
 
   return (
     <View style={styles.contenedor}>
+      <ScrollView>
+        <View style={styles.header}>
+          <Header />
+          { !isValidPresupuesto ? // * Si NO es válido el presupuesto, muestra el formulario
+            <BudgetForm
+              handleNuevoPresupuesto={handleNuevoPresupuesto}
+              presupuesto={presupuesto}
+              setPresupuesto={setPresupuesto}
+            />
+          :
+            // *Si SÍ es válido, muestra el tracker
+            <BudgetTracker
+              presupuesto={Number(presupuesto)}
+              gastos={gastos}
+            />
+          }
+        </View>
 
-      <View style={styles.header}>
-        <Header />
-
-        { !isValidPresupuesto ? // * Si NO es válido el presupuesto, muestra el formulario
-          <BudgetForm
-            handleNuevoPresupuesto={handleNuevoPresupuesto}
-            presupuesto={presupuesto}
-            setPresupuesto={setPresupuesto}
-          />
-        :
-          // *Si SÍ es válido, muestra el tracker
-          <BudgetTracker
-            presupuesto={Number(presupuesto)}
+        { isValidPresupuesto && ( // * && -> Porque es TRUE si existe el presupuesto y solo mostramos informacion
+          // <Text>GaSTOS</Text> //* YA esta por FUERA de la pantalla azul, NO estira el header
+          <ExpenseList 
             gastos={gastos}
           />
-        }
-      </View>
+        ) }
+      </ScrollView>
 
       { modal && (
         <Modal
@@ -99,7 +107,7 @@ const App = () => {
             setModal(!modal)
           }}
         >
-          <ExpenseModal 
+          <ExpenseModal
             modal={modal}
             setModal={setModal}
             handleGastos={handleGastos}
@@ -122,7 +130,6 @@ const App = () => {
         </Pressable>
       </>
       ) }
-
     </View>
   );
 }
@@ -140,12 +147,13 @@ const styles = StyleSheet.create({
 
   botonFlotante: {
     position: 'absolute',
-    bottom: 160,
+    bottom: 50,
     right: 20,
   },
   imagen: {
     width: 60,
-    height: 60
+    height: 60,
+    // bottom: 1,
   }
 });
 
