@@ -5,10 +5,12 @@ import { Gasto } from '../types/type'
 import { ExpenseDetail } from './ExpenseDetail'
 
 type ExpenseListProp = {
-  gastos: Gasto[]
+  gastos: Gasto[],
+  setModal: (value: boolean) => void,
+  setEditGasto: (gastoEditar: Gasto) => void
 }
 
-export const ExpenseList = ({ gastos }: ExpenseListProp) => {
+export const ExpenseList = ({ gastos, setModal, setEditGasto }: ExpenseListProp) => {
 
   const isEmpty = !gastos || gastos.length === 0
   
@@ -22,6 +24,8 @@ export const ExpenseList = ({ gastos }: ExpenseListProp) => {
             <ExpenseDetail
               key={gasto.id}
               gasto={gasto}
+              setModal={setModal}
+              setEditGasto={setEditGasto}// * setModal y setEditGasto viene desde App.tsx->ExpenseList->ExpenseDetail.tsx esto se EVITA con ContextAPI o REDUX
             />
           ) 
         })  
