@@ -21,6 +21,7 @@ const App = () => {
   // const [gastos, setGastos] = useState<Array<Gasto>>([])
   const [ gastos, setGasto ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState<boolean>(false)
+  const [ editGasto, setEditGasto ] = useState<Gasto | null>(null)
 
   const handleNuevoPresupuesto = (presupuestoIngresado: Budget) => {
     // console.log('Desde App...', presupuesto)
@@ -95,6 +96,8 @@ const App = () => {
           // <Text>GaSTOS</Text> //* YA esta por FUERA de la pantalla azul, NO estira el header
           <ExpenseList 
             gastos={gastos}
+            setModal={setModal}
+            setEditGasto={setEditGasto}
           />
         ) }
       </ScrollView>
@@ -111,6 +114,7 @@ const App = () => {
             modal={modal}
             setModal={setModal}
             handleGastos={handleGastos}
+            setEditGasto={setEditGasto} // * Para borrar el STATE cuando se de clic en 'cancelar'
           />
         </Modal>
       )}
