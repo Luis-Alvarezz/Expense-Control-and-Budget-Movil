@@ -12,9 +12,10 @@ type ExpenseModalProps = {
   modal: boolean,
   setModal: (value: boolean) => void
   handleGastos: (gasto: Gasto) => void
+  setEditGasto: (GastoEditar: Gasto | null) => void
 }
 
-const ExpenseModal = ({ modal, setModal, handleGastos }: ExpenseModalProps) => {
+const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto }: ExpenseModalProps) => {
   const [nombre, setNombre] = useState('')
   const [cantidad, setCantidad] = useState('')
   const [categoria, setCategoria] = useState<Categoria | null>(null)
@@ -72,12 +73,15 @@ const ExpenseModal = ({ modal, setModal, handleGastos }: ExpenseModalProps) => {
       <View style={styles.contenedor}>
         <View>
           <Pressable
-            onPress={() => setModal(!modal)}
+            onPress={() => {
+              setModal(!modal)
+              setEditGasto(null)
+            }}
             style={styles.botonCancelar}
           >
             <Text
               style={styles.botonCancelarTexto}
-            >
+            > 
               Cancelar
             </Text>
           </Pressable>
