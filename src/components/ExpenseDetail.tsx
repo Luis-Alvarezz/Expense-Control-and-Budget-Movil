@@ -1,12 +1,14 @@
 // * rafc > Para mostrar cada gasto a detalle desde Componente ExpenseList.tsx
 import React from 'react'
-import { Text, View, Image, StyleSheet } from 'react-native'
+import { Text, View, Image, StyleSheet, Pressable } from 'react-native'
 import { Categoria, Gasto } from '../types/type'
 import { formatCurrency, formatDate } from '../helpers'
 import globalStyles from '../styles'
 
 type ExpenseDetailProp = {
-  gasto: Gasto
+  gasto: Gasto,
+  setModal: (value: boolean) => void,
+  setEditGasto: (gastoEdit: Gasto) => void
 }
 
 // const diccionarioIconos = { // * TS infiere diccionarioIconos como Objeto con keys especificas pero [categoria] es string
@@ -20,22 +22,31 @@ const diccionarioIconos: Record <Categoria, any> = {
   suscripciones: require(`../img/icono_suscripciones.png`),
 }
 
-export const ExpenseDetail = ({ gasto }: ExpenseDetailProp) => {
+export const ExpenseDetail = ({ gasto, setModal, setEditGasto }: ExpenseDetailProp) => { // * setModal y setEditGasto viene desde App.tsx->ExpenseList->ExpenseDetail.tsx esto se EVITA con ContextAPI o REDUX
   const { nombre, categoria, cantidad, date } = gasto
+
+  const handleAcciones = () => {
+    setModal(true)
+    setEditGasto(gasto)
+  }
   return (
-    <View style={styles.contenedor}>
-      <View style={styles.contenido}>
-        <View style={styles.contenedorImagenTexto}>
-          <Image source={diccionarioIconos[categoria]} style={styles.imagenIcono} />
-          <View style={styles.contenedorTexto}>
-            <Text style={styles.categoria}>{categoria}</Text>
-            <Text style={styles.nombre}>{nombre}</Text>
-            <Text style={styles.date}>{formatDate(date)} - {date.toLocaleTimeString()}</Text>
+    <Pressable
+      onLongPress={handleAcciones}
+    >
+      <View style={styles.contenedor}>
+        <View style={styles.contenido}>
+          <View style={styles.contenedorImagenTexto}>
+            <Image source={diccionarioIconos[categoria]} style={styles.imagenIcono} />
+            <View style={styles.contenedorTexto}>
+              <Text style={styles.categoria}>{categoria}</Text>
+              <Text style={styles.nombre}>{nombre}</Text>
+              <Text style={styles.date}>{formatDate(date)} - {date.toLocaleTimeString()}</Text>
+            </View>
           </View>
+          <Text style={styles.cantidad}>{formatCurrency(cantidad)}</Text>
         </View>
-        <Text style={styles.cantidad}>{formatCurrency(cantidad)}</Text>
       </View>
-    </View>
+    </Pressable>
   )
 }
 
