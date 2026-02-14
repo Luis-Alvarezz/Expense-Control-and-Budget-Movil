@@ -1,5 +1,5 @@
 // * rafce - formularioGasto.js
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, StyleSheet, Pressable, TextInput, ScrollView, Alert } from 'react-native'
 import globalStyles from '../styles'
 import { Picker } from '@react-native-picker/picker'
@@ -13,14 +13,16 @@ type ExpenseModalProps = {
   setModal: (value: boolean) => void
   handleGastos: (gasto: Gasto) => void
   setEditGasto: (GastoEditar: Gasto | null) => void
+  gastoEditar: Gasto | null
 }
 
-const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto }: ExpenseModalProps) => {
+const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto, gastoEditar }: ExpenseModalProps) => {
   const [nombre, setNombre] = useState('')
   const [cantidad, setCantidad] = useState('')
   const [categoria, setCategoria] = useState<Categoria | null>(null)
   const [date, setDate] = useState(new Date())
   const [time, setTime] = useState(new Date())
+  const [, setId] = useState(0)
 
   // ! Normlizar el DATE cuando cambia
   const handleDateChange = (selectedDate: Date) => {
@@ -56,7 +58,7 @@ const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto }: ExpenseMo
       return
     }
     handleGastos({
-      id: uuidv4(),
+      id: gastoEditar?.id ? gastoEditar?.id : uuidv4(), // * Siempre genero un ID al terminar de registar el gasto pero esta mal, se genera solo si se va a almacenar
       nombre,
       cantidad: Number(cantidad),
       // categoria: categoria!, // * ! -> non-null assertion --> Es forzar a Ts a que confie en mi y eso NO esta bien
@@ -64,6 +66,21 @@ const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto }: ExpenseMo
       date: fechaFinal
     })
   }
+
+  useEffect(() => {
+    if (gastoEditar?.nombre) { // * optional chaining (?.) -> obj?.prop | obj?.[expre] | func?.(args) Revisar si algunas propiedades existen en el OBJETO sin tronar el codigo
+      // console.log('Si hay algo');
+      setNombre(gastoEditar.nombre)
+      setCantidad(String(gastoEditar.cantidad))
+      setCategoria(gastoEditar.categoria)
+      setDate(gastoEditar.date)
+      setTime(gastoEditar.date)
+      setId(Number(gastoEditar.id))
+    }
+    // } else {
+    //   console.log('NO hay nada');
+    // }
+  }, [gastoEditar])
 
   return (
     <ScrollView 
@@ -88,7 +105,7 @@ const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto }: ExpenseMo
         </View>
 
         <View style={styles.formulario}>
-          <Text style={styles.titulo}>Nuevo Gasto</Text>
+          <Text style={styles.titulo}> {gastoEditar?.nombre ? 'Editar' : 'Nuevo'} Gasto</Text>
 
           <View style={styles.campo}>
             <Text style={styles.label}>Nombre del Gasto</Text>
@@ -162,7 +179,7 @@ const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto }: ExpenseMo
           <Pressable style={styles.submitBTN}
             onPress={() => handleSubmit()}
           >
-            <Text style={styles.submitBTNTexto}>Agregar Gasto</Text>
+            <Text style={styles.submitBTNTexto}> {gastoEditar?.nombre ? 'Actualizar' : 'Añadir'} Gasto</Text>
           </Pressable>
         </View>
       </View>
