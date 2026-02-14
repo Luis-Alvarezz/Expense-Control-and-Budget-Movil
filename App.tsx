@@ -9,18 +9,17 @@ import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupu
 import ExpenseModal from './src/components/ExpenseModal';
 import 'react-native-get-random-values'
 import { ExpenseList } from './src/components/ExpenseList';
-// import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
   const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false) // * false hasta que el usuario ingrese un valor
   const [presupuesto, setPresupuesto] = useState<string>('')
-  // const [gastos, setGastos] = useState<Array<{ id: number, cantidad: number }>>([
+  // const [gastos, setGastoss] = useState<Array<{ id: number, cantidad: number }>>([
   //     { id: 1, cantidad: 30 },
   //     { id: 2, cantidad: 40 },
   //     { id: 3, cantidad: 50 },
   //   ])
-  // const [gastos, setGastos] = useState<Array<Gasto>>([])
-  const [ gastos, setGasto ] = useState<Gasto[]>([])
+  // const [gastos, setGastoss] = useState<Array<Gasto>>([])
+  const [ gastos, setGastos ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState<boolean>(false)
   const [ editGasto, setEditGasto ] = useState<Gasto | null>(null)
 
@@ -76,11 +75,11 @@ const App = () => {
     if (editGasto && editGasto.id === gasto.id) { // ! Evualue el ID al momento de añadir un nuevo gasto en ExpenseModal.tsx
       // console.log('Edicion');
       const gastosActualizados = gastos.map(gastoTemporalState => gastoTemporalState.id === gasto.id ? gasto : gastoTemporalState)
-      setGasto(gastosActualizados)
+      setGastos(gastosActualizados)
     } else {
       // console.log('Nuevo Registro');
       // * Anadir el gasto al STATE
-      setGasto([...gastos, gasto])
+      setGastos([...gastos, gasto])
     }
     setModal(!modal)
   }
