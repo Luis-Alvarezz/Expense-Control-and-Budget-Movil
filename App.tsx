@@ -9,6 +9,7 @@ import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupu
 import ExpenseModal from './src/components/ExpenseModal';
 import 'react-native-get-random-values'
 import { ExpenseList } from './src/components/ExpenseList';
+// import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
   const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false) // * false hasta que el usuario ingrese un valor
@@ -51,12 +52,17 @@ const App = () => {
     // console.log('TIME:', gasto.date.toLocaleTimeString())
     // console.log('FINAL:', gasto.date.toString())
     // console.log('FECHA: ', gasto.date.toString()) // * RECIBE -> Sun May 02 2027 23:01:00 GMT-0600
+    // console.log(gasto);
     // return
 
-    if (Object.values(gasto).includes('')) {
+    // if (Object.values(gasto).includes('')) {
+    if ([gasto.nombre, gasto.cantidad, gasto.categoria ].includes('')) { // * Si el objeto gasto tuviera fecha y id pueden con posibilidad de ir vacios,
+      // * Tendria problemas al crear un gasto, pero validando lo importante, porque se crear antes de insertar al objeto o STATE y no se validan antes de crear el objeto
       Alert.alert('Error', 'Todos los campos son obligatorios', [{text: 'OK'}])
       return
     }
+    console.log(gasto);
+    // return
 
     const hour = gasto.date.getHours()
     if (hour >= 23 || hour < 6) {
@@ -67,8 +73,15 @@ const App = () => {
       return // * Equivalente al else
     }
 
-    // * Anadir el gasto al STATE
-    setGasto([...gastos, gasto])
+    if (editGasto && editGasto.id === gasto.id) { // ! Evualue el ID al momento de añadir un nuevo gasto en ExpenseModal.tsx
+      // console.log('Edicion');
+      const gastosActualizados = gastos.map(gastoTemporalState => gastoTemporalState.id === gasto.id ? gasto : gastoTemporalState)
+      setGasto(gastosActualizados)
+    } else {
+      // console.log('Nuevo Registro');
+      // * Anadir el gasto al STATE
+      setGasto([...gastos, gasto])
+    }
     setModal(!modal)
   }
 
@@ -115,6 +128,7 @@ const App = () => {
             setModal={setModal}
             handleGastos={handleGastos}
             setEditGasto={setEditGasto} // * Para borrar el STATE cuando se de clic en 'cancelar'
+            gastoEditar={editGasto}
           />
         </Modal>
       )}
