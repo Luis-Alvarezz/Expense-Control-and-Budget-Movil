@@ -37,7 +37,7 @@ export const ExpenseList = ({ gastos, setModal, setEditGasto }: ExpenseListProp)
 
 const styles = StyleSheet.create({
   contenedor: {
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 100,
   },
   titulo: {
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     fontWeight: '700',
-    marginTop: 50,
   },
   noGastoTitulo: {
     marginTop: 20,
