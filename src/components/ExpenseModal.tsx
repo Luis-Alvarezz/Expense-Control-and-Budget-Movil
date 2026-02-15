@@ -14,9 +14,10 @@ type ExpenseModalProps = {
   handleGastos: (gasto: Gasto) => void
   setEditGasto: (GastoEditar: Gasto | null) => void
   gastoEditar: Gasto | null
+  handleDelete: (idGasto: String) => void
 }
 
-const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto, gastoEditar }: ExpenseModalProps) => {
+const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto, gastoEditar, handleDelete }: ExpenseModalProps) => {
   const [nombre, setNombre] = useState('')
   const [cantidad, setCantidad] = useState('')
   const [categoria, setCategoria] = useState<Categoria | null>(null)
@@ -67,6 +68,22 @@ const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto, gastoEditar
     })
   }
 
+  // ! Validacion de eliminar gasto
+  // const validacionEliminarGasto = () => {
+  //   Alert.alert(
+  //     `Gasto - ${gastoEditar?.nombre}`,
+  //     '¿Estas seguro que quieres eliminar el gasto?',
+  //     [
+  //       { text: 'Cancelar' },
+  //       { text: 'Eliminar', onPress: () => {
+  //         if (!gastoEditar) return
+  //         handleDelete(gastoEditar?.id)
+  //         setEditGasto(null)
+  //       }}
+  //     ]
+  //   )
+  // }
+
   useEffect(() => {
     if (gastoEditar?.nombre) { // * optional chaining (?.) -> obj?.prop | obj?.[expre] | func?.(args) Revisar si algunas propiedades existen en el OBJETO sin tronar el codigo
       // console.log('Si hay algo');
@@ -88,20 +105,34 @@ const ExpenseModal = ({ modal, setModal, handleGastos, setEditGasto, gastoEditar
       keyboardShouldPersistTaps="handled" // ! Evitar que el teclado bloquee el scroll
     >
       <View style={styles.contenedor}>
-        <View>
+        <View style={styles.contenedorBotones}>
           <Pressable
             onPress={() => {
               setModal(!modal)
               setEditGasto(null)
             }}
-            style={styles.botonCancelar}
+            style={[styles.btn, styles.botonCancelar]}
           >
             <Text
-              style={styles.botonCancelarTexto}
+              style={styles.botonTexto}
             > 
               Cancelar
             </Text>
           </Pressable>
+
+          { gastoEditar?.id && ( // ! Si la condición es TRUE → renderiza el componente si es FALSE -> NO muestres nada
+          // * Si gastoEditar existe → dame su id | Si no → devuelve undefined sin romper la app
+            <Pressable
+              style={[styles.btn, styles.btnBorrar]}
+              onPress={() => handleDelete(gastoEditar.id)}
+            >
+              <Text
+                style={styles.botonTexto}
+              >
+                Eliminar
+              </Text>
+            </Pressable>
+          )}
         </View>
 
         <View style={styles.formulario}>
@@ -195,6 +226,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E40AF',
     flex: 1,
   },
+
+  contenedorBotones: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
   formulario: {
     ...globalStyles.contenedor,
   },
@@ -239,11 +277,8 @@ const styles = StyleSheet.create({
 
   botonCancelar: {
     backgroundColor: '#DB2777',
-    padding: 10,
-    marginTop: 30,
-    marginHorizontal: 20,
   },
-  botonCancelarTexto: {
+  botonTexto: {
     textTransform: 'uppercase',
     fontWeight: 'bold',
     color: '#FFF',
@@ -260,7 +295,18 @@ const styles = StyleSheet.create({
   dateBox: {
     flex: 1, // ? Para que AMBOS PICKERS midan lo mismo
     alignItems: 'center',
-  }
+  },
+
+  btn: {
+    marginHorizontal: 10,
+    marginTop: 30,
+    padding: 10,
+    // width: '40%',
+    flex: 1,
+  },
+  btnBorrar: {
+    backgroundColor: '#ec3939ff',
+  },
 })
 
 export default ExpenseModal
