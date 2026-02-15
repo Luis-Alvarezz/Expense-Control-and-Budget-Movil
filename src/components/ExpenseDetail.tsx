@@ -40,7 +40,8 @@ export const ExpenseDetail = ({ gasto, setModal, setEditGasto }: ExpenseDetailPr
             <View style={styles.contenedorTexto}>
               <Text style={styles.categoria}>{categoria}</Text>
               <Text style={styles.nombre}>{nombre}</Text>
-              <Text style={styles.date}>{formatDate(date)} - {date.toLocaleTimeString()}</Text>
+              <Text style={styles.date}>{formatDate(date)}</Text>
+              <Text style={styles.date}>{date.toLocaleTimeString()}</Text>
             </View>
           </View>
           <Text style={styles.cantidad}>{formatCurrency(cantidad)}</Text>
@@ -71,8 +72,8 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   imagenIcono: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
   },
 
   contenedorTexto:{
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   date: {
-    fontSize: 13,
+    fontSize: 15,
     color: '#94A3B8',
     fontWeight: 'bold',
   },
