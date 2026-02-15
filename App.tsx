@@ -21,7 +21,7 @@ const App = () => {
   // const [gastos, setGastoss] = useState<Array<Gasto>>([])
   const [ gastos, setGastos ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState<boolean>(false)
-  const [ editGasto, setEditGasto ] = useState<Gasto | null>(null)
+  const [ editGasto, setEditGasto ] = useState<Gasto | null>(null) // * STATE Temporal para almacenar el STATE a editar o Eliminar
 
   const handleNuevoPresupuesto = (presupuestoIngresado: Budget) => {
     // console.log('Desde App...', presupuesto)
@@ -84,6 +84,25 @@ const App = () => {
     setModal(!modal)
   }
 
+  // ! Validar y Eliminar Gasto
+  const handleDelete = (idGasto: String) => {
+    // console.log('Eliminando Gasto ID: ', idGasto)
+    Alert.alert(
+      `Gasto - ${editGasto?.nombre}`,
+      '¿Estas seguro que quieres eliminar el gasto?',
+      [
+        { text: 'Cancelar' },
+        { text: 'Eliminar', onPress: () => {
+          if (!editGasto) return
+          // handleDelete(editGasto?.id)
+          setGastos(gastos.filter(gastoDelete => gastoDelete.id !== idGasto))
+          setModal(!modal)
+          setEditGasto(null)
+        }}
+      ]
+    )
+  }
+
   return (
     <View style={styles.contenedor}>
       <ScrollView>
@@ -128,6 +147,7 @@ const App = () => {
             handleGastos={handleGastos}
             setEditGasto={setEditGasto} // * Para borrar el STATE cuando se de clic en 'cancelar'
             gastoEditar={editGasto}
+            handleDelete={handleDelete}
           />
         </Modal>
       )}
@@ -163,6 +183,7 @@ const styles = StyleSheet.create({
   },
 
   botonFlotante: {
+    // backgroundColor: 'red',
     position: 'absolute',
     bottom: 50,
     right: 20,
