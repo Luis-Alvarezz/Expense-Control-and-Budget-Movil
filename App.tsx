@@ -24,7 +24,7 @@ const App = () => {
   const [ modal, setModal ] = useState<boolean>(false)
   const [ editGasto, setEditGasto ] = useState<Gasto | null>(null) // * STATE Temporal para almacenar el STATE a editar o Eliminar
   const [ filtro, setFiltro ] = useState('') // * STATE para trabajar con la 'categoria' seleccionada y pasarla al STATE 'setGastosFiltrados'
-  const [, setGastosFiltrados ] = useState<Gasto[]>([]) // * Para eliminar los gastos filtrados previamente al hacer un nuevo filtrado.
+  const [ gastosFiltrados, setGastosFiltrados ] = useState<Gasto[]>([]) // * Para eliminar los gastos filtrados previamente al hacer un nuevo filtrado.
 
   const handleNuevoPresupuesto = (presupuestoIngresado: Budget) => {
     // console.log('Desde App...', presupuesto)
@@ -140,6 +140,8 @@ const App = () => {
               gastos={gastos}
               setModal={setModal}
               setEditGasto={setEditGasto}
+              filtro={filtro}
+              gastosFiltrados={gastosFiltrados}
             />
           </>
         ) }
