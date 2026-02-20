@@ -8,28 +8,39 @@ type ExpenseListProp = {
   gastos: Gasto[],
   setModal: (value: boolean) => void,
   setEditGasto: (gastoEditar: Gasto) => void
+  filtro: String
+  gastosFiltrados: Gasto[]
+
 }
 
-export const ExpenseList = ({ gastos, setModal, setEditGasto }: ExpenseListProp) => {
-
-  const isEmpty = !gastos || gastos.length === 0
+export const ExpenseList = ({ gastos, setModal, setEditGasto, filtro, gastosFiltrados }: ExpenseListProp) => {
   
   return (
     <View style={styles.contenedor}>
       <Text style={styles.titulo}>Listado de Gastos</Text>
-      { isEmpty ? 
-        <Text style={styles.noGastoTitulo}>No hay gastos</Text> :
-        gastos.map(gasto => {
-          return (
-            <ExpenseDetail
+
+      { filtro ? gastosFiltrados.map( gasto => (
+        <ExpenseDetail
               key={gasto.id}
               gasto={gasto}
               setModal={setModal}
               setEditGasto={setEditGasto}// * setModal y setEditGasto viene desde App.tsx->ExpenseList->ExpenseDetail.tsx esto se EVITA con ContextAPI o REDUX
             />
-          ) 
-        })  
+      ) ) : 
+        gastos.map( gasto => (
+           <ExpenseDetail
+              key={gasto.id}
+              gasto={gasto}
+              setModal={setModal}
+              setEditGasto={setEditGasto}// * setModal y setEditGasto viene desde App.tsx->ExpenseList->ExpenseDetail.tsx esto se EVITA con ContextAPI o REDUX
+            />
+        ))
       }
+
+      { gastos.length === 0 || (gastosFiltrados.length === 0 && !!filtro) && (
+        <Text style={styles.noGastoTitulo}>No hay Gastos</Text>
+      )}
+
     </View>
   )
 }
