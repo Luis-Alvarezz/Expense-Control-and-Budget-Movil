@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, Dispatch, SetStateAction } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import globalStyles from '../styles'
@@ -8,7 +8,8 @@ type FilterByCategoryProp = {
   filtro: string
   setFiltro: (filtro: string) => void
   gastos: Gasto[],
-  setGastosFiltrados: (gastoFiltrado: Gasto[]) => void
+  // setGastosFiltrados: (gastoFiltrado: Gasto[] | null) => void // * ERROR en App.tsx:  Type 'Gasto[]' is not assignable to type 'SetStateAction<Gasto | null>' 
+  setGastosFiltrados: Dispatch<SetStateAction<Gasto[]>>
 }
 
 export const FilterByCategory = ({ filtro, setFiltro, gastos, setGastosFiltrados }: FilterByCategoryProp) => {
