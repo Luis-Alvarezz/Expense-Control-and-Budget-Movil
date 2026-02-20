@@ -9,6 +9,7 @@ import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupu
 import ExpenseModal from './src/components/ExpenseModal';
 import 'react-native-get-random-values'
 import { ExpenseList } from './src/components/ExpenseList';
+import { FilterByCategory } from './src/components/FilterByCategory';
 
 const App = () => {
   const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false) // * false hasta que el usuario ingrese un valor
@@ -22,6 +23,8 @@ const App = () => {
   const [ gastos, setGastos ] = useState<Gasto[]>([])
   const [ modal, setModal ] = useState<boolean>(false)
   const [ editGasto, setEditGasto ] = useState<Gasto | null>(null) // * STATE Temporal para almacenar el STATE a editar o Eliminar
+  const [ filtro, setFiltro ] = useState('') // * STATE para trabajar con la 'categoria' seleccionada y pasarla al STATE 'setGastosFiltrados'
+  const [, setGastosFiltrados ] = useState<Gasto[]>([]) // * Para eliminar los gastos filtrados previamente al hacer un nuevo filtrado.
 
   const handleNuevoPresupuesto = (presupuestoIngresado: Budget) => {
     // console.log('Desde App...', presupuesto)
@@ -125,11 +128,20 @@ const App = () => {
 
         { isValidPresupuesto && ( // * && -> Porque es TRUE si existe el presupuesto y solo mostramos informacion
           // <Text>GaSTOS</Text> //* YA esta por FUERA de la pantalla azul, NO estira el header
-          <ExpenseList 
-            gastos={gastos}
-            setModal={setModal}
-            setEditGasto={setEditGasto}
-          />
+          <>
+            <FilterByCategory
+              filtro={filtro}
+              setFiltro={setFiltro}
+              gastos={gastos}
+              setGastosFiltrados={setGastosFiltrados}
+            />
+
+            <ExpenseList 
+              gastos={gastos}
+              setModal={setModal}
+              setEditGasto={setEditGasto}
+            />
+          </>
         ) }
       </ScrollView>
 
