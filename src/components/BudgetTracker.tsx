@@ -1,6 +1,6 @@
 // * ControlPresupuesto
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import globalStyles from '../styles'
 import AmountDisplay from './AmountDisplay'
 import { Gasto } from '../types/type'
@@ -8,10 +8,11 @@ import CircularProgress from 'react-native-circular-progress-indicator'
 
 type BudgetTrackerProp = {
   presupuesto: number,
-  gastos: Gasto[]
+  gastos: Gasto[],
+  deleteAllApp: () => void
 }
 
-export default function BudgetTracker({ presupuesto, gastos }: BudgetTrackerProp) {
+export default function BudgetTracker({ presupuesto, gastos, deleteAllApp }: BudgetTrackerProp) {
   const [disponible, setDisponible] = useState<number>(0)
   const [gastado, setGastado] = useState<number>(0)
   const [ porcentaje, setPorcentaje ] = useState(0)
@@ -65,8 +66,17 @@ export default function BudgetTracker({ presupuesto, gastos }: BudgetTrackerProp
         />
       </View>
 
-      <View style={styles.contenedorTexto}>
 
+      <View style={styles.contenedorTexto}>
+        <Pressable 
+          style={styles.resetApp}
+          onPress={deleteAllApp}
+        >
+          <Text style={styles.resetAppTexto}>
+            Reset App
+          </Text>
+        </Pressable>
+        
         <Text>
           <AmountDisplay
             label="Budget"
@@ -114,5 +124,20 @@ const styles = StyleSheet.create({
   tituloCircularPosgress: {
     fontWeight: '700', 
     fontSize: 25,
+  },
+
+  resetApp: {
+    marginBottom: 20,
+    backgroundColor: '#D53F8C',
+    padding: 10,
+    borderRadius: 10,
+    
+  },
+  resetAppTexto: {
+    color: '#FFF',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    fontSize: 18,
   }
 })
