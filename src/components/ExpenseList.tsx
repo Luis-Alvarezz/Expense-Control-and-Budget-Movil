@@ -37,7 +37,7 @@ export const ExpenseList = ({ gastos, setModal, setEditGasto, filtro, gastosFilt
         ))
       }
 
-      { gastos.length === 0 || (gastosFiltrados.length === 0 && !!filtro) && (
+      { (gastos.length === 0 || (gastosFiltrados.length === 0 && !!filtro)) && (
         <Text style={styles.noGastoTitulo}>No hay Gastos</Text>
       )}
 
