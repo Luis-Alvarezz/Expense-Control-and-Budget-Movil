@@ -4,12 +4,13 @@ import { StyleSheet, View, Alert, Pressable, Image, Modal, ScrollView } from 're
 import { Header } from './src/components/Header';
 import { BudgetForm } from './src/components/BudgetForm';
 import { Budget, Gasto } from './src/types/type';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BudgetTracker from './src/components/BudgetTracker'; // * Control Presupuesto
 import ExpenseModal from './src/components/ExpenseModal';
 import 'react-native-get-random-values'
 import { ExpenseList } from './src/components/ExpenseList';
 import { FilterByCategory } from './src/components/FilterByCategory';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const [isValidPresupuesto, setIsValidPresupusto] = useState<boolean>(false) // * false hasta que el usuario ingrese un valor
@@ -25,6 +26,80 @@ const App = () => {
   const [ editGasto, setEditGasto ] = useState<Gasto | null>(null) // * STATE Temporal para almacenar el STATE a editar o Eliminar
   const [ filtro, setFiltro ] = useState('') // * STATE para trabajar con la 'categoria' seleccionada y pasarla al STATE 'setGastosFiltrados'
   const [ gastosFiltrados, setGastosFiltrados ] = useState<Gasto[]>([]) // * Para eliminar los gastos filtrados previamente al hacer un nuevo filtrado.
+
+  // useEffect(() => {
+  //   const almacenarAsycnStorage = async () => {
+  //     const nombre = [20,20,40]
+  //     await AsyncStorage.setItem('Prueba_Async Storage', JSON.stringify(nombre))
+  //     console.log('Almacenado.....');
+      
+  //   }
+  //   almacenarAsycnStorage()
+  // }, []) // * Cuando cargue el Primer Componente
+
+  // ! 2.- Leer la key creada en el Async Storage
+  useEffect(() => {
+    const obtenerPresupuestoStorage = async () => {
+      try {
+        const presupuestoStorage = await AsyncStorage.getItem('planificador_presupuesto') ?? 0 // * Nullish Coalescing Operator 
+        console.log(presupuestoStorage)
+
+        if (Number(presupuestoStorage) > 0) {
+          setPresupuesto(String(presupuestoStorage))
+          setIsValidPresupusto(true)
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    obtenerPresupuestoStorage()
+  }, []) // * Se ejecuta 1 sola vez
+
+  // ! 1.- Crear la llave con presupuesto para almacenarlo en AsyncStorage 
+  useEffect(() => {
+    if (isValidPresupuesto) {
+      const guardarPresupuestoStorage = async () => {
+        try {
+          await AsyncStorage.setItem('planificador_presupuesto', presupuesto)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      guardarPresupuestoStorage()
+    }
+  }, [isValidPresupuesto])
+
+  // ! 4.- Recueprar gastos de Async Storage
+  useEffect(() => {
+    const obtenerGastosStorage = async () => {
+      try {
+        const gastosStorage = await AsyncStorage.getItem('planificador_gasto') // * Si no existen gastos, se le asigna um []
+        
+        const gastosParseados: Gasto[] = gastosStorage ? JSON.parse(gastosStorage).map((gasto: Gasto[]) => ({ // * con parse pasamos de 'string' a ARREGLO
+          ...gasto,
+          date: new Date(gasto.date) // * Reconstruimos Date para pasarlo de STRING a Date nuavamente
+        })) : []
+        console.log(gastosStorage);
+        setGastos( gastosParseados )
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    obtenerGastosStorage()
+  }, []) // * Se ejecuta 1 unica vez
+
+  // ! 3. Colocar los Gastos en Storage
+  useEffect(() => {
+    const guardarGastoStorage = async () => {
+      try {
+        await AsyncStorage.setItem('planificador_gasto', JSON.stringify(gastos))
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    guardarGastoStorage()
+  }, [gastos])
+
 
   const handleNuevoPresupuesto = (presupuestoIngresado: Budget) => {
     // console.log('Desde App...', presupuesto)
